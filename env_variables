@@ -1,0 +1,28 @@
+packages:
+- docker
+- kubeadm
+- kubectl
+
+services:
+- docker
+- kubelet
+- firewalld
+
+ports:
+- "6443/tcp"
+- "10250/tcp"
+- "8080/tcp"
+- "80/tcp"
+- "443/tcp"
+- "8285/udp"
+- "8472/udp"
+- "10250/tcp"
+- "10255/tcp"
+- "8472/udp"
+- "2379/tcp"
+- "2380/tcp"
+
+ad_addr: 52.244.79.68
+token_file: join_token
+username: 
+password: 

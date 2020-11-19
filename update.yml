@@ -1,0 +1,37 @@
+---
+- hosts: kubernetes-master-nodes
+  user: root
+  become: true
+  tasks:
+  - name: Add RHEL subscription
+    shell: subscription-manager register --force --username smellyjosh --password subaruWRX20
+
+  - name: Auto Attach subscription
+    shell: subscription-manager attach --auto
+
+  - name: Update all YUM packages
+    yum:
+       name: "*"
+       state: latest
+
+  - name: Disabling Swap on all nodes
+    shell: swapoff -a
+
+  - name: Commenting Swap entries in /etc/fstab
+    replace:
+     path: /etc/fstab
+     regexp: '(^/.*swap*)'
+     replace: '# \1'
+
+  - name: Setting IP IP_Forward=1
+    shell: |
+      sysctl -w net.ipv4.ip_forward=1
+      sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf
+      sysctl -p /etc/sysctl.conf
+
+  - name: Install Docker
+    yum:
+      name: docker
+
+  - name: Start Docker
+    shell: systemctl start docker  

@@ -1,0 +1,58 @@
+---
+- hosts: kubernetes-master-nodes
+  become: yes
+  vars_files:
+  - env_variables
+  tasks:
+  - name: Download file with check (md5)
+    get_url:
+      url: https://get.helm.sh/helm-v3.4.1-linux-amd64.tar.gz
+      dest: /home/helm.tar.gz
+      checksum: sha256:538f85b4b73ac6160b30fd0ab4b510441aa3fa326593466e8bf7084a9c288420
+
+  - name: Unarchive a file that is already on the remote machine
+    unarchive:
+      src: /home/helm.tar.gz
+      dest: /home
+      remote_src: yes
+
+  - name: Move Helm Binary
+    command: mv /home/linux-amd64/helm /usr/bin/
+
+  - name: Add helm to Path
+    shell: export PATH=$PATH:/usr/local/bin
+
+  - name: Add Rancher Helm repo
+    community.kubernetes.helm_repository:
+      name: Rancher
+      repo_url: "https://releases.rancher.com/server-charts/latest"
+
+  - name: Add Jetstack Helm repo
+    community.kubernetes.helm_repository:
+      name: jetstack
+      repo_url: "https://charts.jetstack.io"
+
+  - name: Create Rancher name space "cattle-system"
+    command: kubectl create namespace cattle-system
+
+  - name: Create Rancher name space "cert-manager"
+    command: kubectl create namespace cert-manager
+
+  - name: Update helm Repos
+    command: helm repo update
+
+  - name: Install CRD's
+    command: kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.0.4/cert-manager.crds.yaml
+
+  - name: Install Cert-Manager
+    command: helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.0.4
+
+  - name: Wait for Cert-Manager webhook
+    wait_for:
+      timeout: 30
+
+  - name: Install Rancher
+    command: helm install rancher rancher-latest/rancher --namespace cattle-system --set hostname=masternode
+    register: out
+  - debug: var=out.stdout_lines
+

@@ -1,0 +1,16 @@
+---
+- hosts: localhost
+  become: yes
+  tasks:
+    - name: Set facts
+      set_fact:
+        az_client_id: '3f7af842-f38b-4174-9aa3-7f4b42470473'
+        object_id: "{{ lookup('env', '3f7af842-f38b-4174-9aa3-7f4b42470473') }}"
+
+    - name: Create a secret
+      azure_rm_keyvaultsecret:
+        subscription_id: "ea1ddba8-2f8d-4b8b-97bf-187f2ae18124"
+        client_id: "3f7af842-f38b-4174-9aa3-7f4b42470473"
+        keyvault_uri: "https://creds.vault.usgovcloudapi.net/"
+        secret_name: "testsecret"
+        secret_value: "MySecret007$"

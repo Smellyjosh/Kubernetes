@@ -1,0 +1,9 @@
+---
+- hosts: all
+  user: root
+  become: true
+  tasks:
+  
+  - name: Resetting kubeadm
+    shell: kubeadm reset -f
+    register: output

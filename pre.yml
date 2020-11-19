@@ -1,0 +1,92 @@
+---
+- hosts: all
+  user: root
+  become: true
+
+# Variables are taken from env_variables file
+  vars_files:
+  - env_variables
+  tasks:
+
+ # Add a REHL subscription to machine   
+  - name: Add RHEL subscription
+    shell: subscription-manager register --force --username {{username}} --password {{password}}
+
+  - name: Auto Attach subscription
+    shell: subscription-manager attach --auto
+
+# Creating file kubernetes repo will be added to
+  - name: Creating a repository file for Kubernetes
+    file:
+     path: /etc/yum.repos.d/kubernetes.repo
+     state: touch
+
+# Adding repo for kubernetes and GPG key
+  - name: Adding repository details in Kubernetes repo file.
+    blockinfile:
+     path: /etc/yum.repos.d/kubernetes.repo
+     block: |
+      [kubernetes]
+      name=Kubernetes
+      baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64   
+      enabled=1
+      gpgcheck=1
+      repo_gpgcheck=1
+      gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
+        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+
+# Update all packages
+  - name: Update all YUM packages
+    yum:
+       name: "*"
+       state: latest
+
+# Kubernetes currently does not support memory swap
+  - name: Disabling Swap on all nodes
+    shell: swapoff -a
+
+# Making the diabled swap persistent 
+  - name: Commenting Swap entries in /etc/fstab
+    replace:
+     path: /etc/fstab
+     regexp: '(^/.*swap*)'
+     replace: '# \1'
+
+# IP forwarding is a kernel setting that allows forwarding of the traffic coming from one interface to be routed to another interface.
+# This setting is necessary for Linux kernel to route traffic from containers to the outside world.
+  - name: Setting IP IP_Forward=1
+    shell: |
+      sysctl -w net.ipv4.ip_forward=1
+      sed -i 's/#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/g' /etc/sysctl.conf  
+      sysctl -p /etc/sysctl.conf
+
+# Install docker, kubelet and kubectl. Changable in env_variables file under packages.
+  - name: Installing required packages
+    yum:
+     name: "{{ item }}"
+     state: present
+    with_items: "{{ packages }}"
+
+# Starting Docker, kublet, and firewallD. Changable in env_variables file under services.
+  - name: Starting and Enabling the required services
+    service:
+     name: "{{ item }}"
+     state: started
+     enabled: yes
+    with_items: "{{ services }}"
+
+# Opening required ports for base packages
+  - name: Allow Network Ports in Firewalld
+    firewalld:
+     port: "{{ item }}"
+     state: enabled
+     permanent: yes
+     immediate: yes
+    with_items: "{{ ports }}"
+
+  - name: Enabling Bridge Firewall Rule
+    shell: "echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables"
+
+# Currently having issues with kubernetes install working with selinux in enforcing mode.
+  - name: Setting Selinux to permissive
+    shell: setenforce 0
