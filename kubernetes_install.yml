@@ -1,6 +1,6 @@
 ---
-- import_playbook: reset.yml
 - import_playbook: pre.yml
 - import_playbook: master_node.yml
 - import_playbook: worker_node.yml
 - import_playbook: rancher.yml
+
