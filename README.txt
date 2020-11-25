@@ -22,3 +22,7 @@ Required Installs for host machine running playbooks:
 
  6.) Add node IPs to Inventory File and confirm additional variables in file.
  - sudo vim inventory.ini
+
+7.) Add your RHEL credentials for subscription
+ - Add RHEL credentials to the bottom of the env_variables file under username/password.
+ - This allows your subscritpion to be attached to all nodes
