@@ -25,6 +25,8 @@ ports:
 subscriptions:
 - "rhel-7-server-optional-rpms"
 - "rhel-7-server-extras-rpms"
+- "rhel-7-server-rpms"
+- "rhel-7-server-optional-source-rpms"
 
 kubernetesRepo:
 - "https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64"

@@ -19,7 +19,7 @@
 
 # Enabling extra RHEL Server Repos
 # Adding Addtional RHEL repos to enable is available in env_variables file under subscriptions. 
-  - name: Add RHEL subscription
+  - name: enable RHEL repos
     rhsm_repository:
       name: "{{item}}"
       state: enabled
@@ -42,7 +42,8 @@
       enabled=1
       gpgcheck=1
       repo_gpgcheck=1
-      gpgkey="{{ kubernetesGPGYum }}" "{{ kubernetesGPG }}"
+      gpgkey="{{ kubernetesGPGYum }}" 
+        "{{ kubernetesGPG }}"
 
 # Update all packages
   - name: Update all YUM packages
