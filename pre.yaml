@@ -16,6 +16,7 @@
       username: "{{username}}"
       password: "{{password}}"
       auto_attach: true
+      force_register: true
 
 # Enabling extra RHEL Server Repos
 # Adding Addtional RHEL repos to enable is available in env_variables file under subscriptions. 
