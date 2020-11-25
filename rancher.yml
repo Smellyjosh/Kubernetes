@@ -10,13 +10,13 @@
       dest: /home/helm.tar.gz
       checksum: sha256:538f85b4b73ac6160b30fd0ab4b510441aa3fa326593466e8bf7084a9c288420
 
-  - name: Unarchive a file that is already on the remote machine
+  - name: Unarchive helm tar
     unarchive:
       src: /home/helm.tar.gz
       dest: /home
       remote_src: yes
 
-  - name: Move Helm Binary
+  - name: Move Helm Binary to bin
     command: mv /home/linux-amd64/helm /usr/bin/
 
   - name: Add helm to Path
@@ -26,6 +26,9 @@
     community.kubernetes.helm_repository:
       name: Rancher
       repo_url: "https://releases.rancher.com/server-charts/latest"
+  
+  - name: Add Rancher Helm repo (duplicate, testing something)
+    shell: helm repo add rancher-latest https://releases.rancher.com/server-charts/latest
 
   - name: Add Jetstack Helm repo
     community.kubernetes.helm_repository:
@@ -59,7 +62,7 @@
       timeout: 60
 
   - name: Install Rancher
-    command: helm install rancher rancher-latest/rancher --namespace cattle-system --set hostname=$(hostname)
+    command: helm install rancher rancher-latest/rancher --namespace cattle-system --set hostname=masternode
     register: out
   - debug: var=out.stdout_lines
 

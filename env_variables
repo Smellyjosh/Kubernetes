@@ -22,6 +22,22 @@ ports:
 - "2379/tcp"
 - "2380/tcp"
 
+subscriptions:
+- "rhel-7-server-optional-rpms"
+- "rhel-7-server-extras-rpms"
+
+kubernetesRepo:
+- "https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64"
+
+kubernetesGPGYum:
+- "https://packages.cloud.google.com/yum/doc/yum-key.gpg"
+
+kubernetesGPG:
+- "https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg"
+
+kubernetesCIDR:
+- "10.244.0.0/16"
+
 ad_addr: 52.244.79.68
 token_file: join_token
 username: smellyjosh 

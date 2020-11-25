@@ -8,12 +8,22 @@
   - env_variables
   tasks:
 
- # Add a REHL subscription to machine   
-  - name: Add RHEL subscription
-    shell: subscription-manager register --force --username {{username}} --password {{password}}
+# Attaching the RHEL subscription so we can make use of official RHEL Repos
+# Credentials changable in env_variables file under username and password
+  - name: Attach RHEL subscription
+    community.general.redhat_subscription:
+      state: present
+      username: "{{username}}"
+      password: "{{password}}"
+      auto_attach: true
 
-  - name: Auto Attach subscription
-    shell: subscription-manager attach --auto
+# Enabling extra RHEL Server Repos
+# Adding Addtional RHEL repos to enable is available in env_variables file under subscriptions. 
+  - name: Add RHEL subscription
+    rhsm_repository:
+      name: "{{item}}"
+      state: enabled
+    with_items: "{{subscriptions}}"
 
 # Creating file kubernetes repo will be added to
   - name: Creating a repository file for Kubernetes
@@ -21,19 +31,18 @@
      path: /etc/yum.repos.d/kubernetes.repo
      state: touch
 
-# Adding repo for kubernetes and GPG key
+# Adding kubernetes repo and GPG key check
   - name: Adding repository details in Kubernetes repo file.
     blockinfile:
      path: /etc/yum.repos.d/kubernetes.repo
      block: |
       [kubernetes]
       name=Kubernetes
-      baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64   
+      baseurl="{{kubernetesRepo}}"   
       enabled=1
       gpgcheck=1
       repo_gpgcheck=1
-      gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
-        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+      gpgkey="{{ kubernetesGPGYum }}" "{{ kubernetesGPG }}"
 
 # Update all packages
   - name: Update all YUM packages
@@ -84,9 +93,15 @@
      immediate: yes
     with_items: "{{ ports }}"
 
+# Needed for Kubernetes configuration
   - name: Enabling Bridge Firewall Rule
     shell: "echo '1' > /proc/sys/net/bridge/bridge-nf-call-iptables"
 
-# Currently having issues with kubernetes install working with selinux in enforcing mode.
+# Currently having issues with kubernetes install working with selinux in enforcing mode
+# Will test enabled Selinux after install is complete
   - name: Setting Selinux to permissive
     shell: setenforce 0
+
+# Using FirewallD for rules, flushing IPtables Rules. Can probably stop IPtables service.
+  - name: Flushing IPtables, Using FirewallD
+    shell: iptables -F

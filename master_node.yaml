@@ -4,20 +4,27 @@
   vars_files:
   - env_variables
   tasks:
-  - name: Pulling images required for setting up a Kubernetes cluster
-    shell: kubeadm config images pull
 
+# Kubeadm has no ansible module, we are using the command module.   
+  - name: Pulling images required for setting up a Kubernetes cluster
+    command: kubeadm config images pull
+
+# If a previous kubernetes cluster is active, we will destroy. This was mainly used in testing.
   - name: Resetting kubeadm
-    shell: kubeadm reset -f
+    command: kubeadm reset -f
     register: output
 
+# Creating the kubernetes cluster. Using the shell since we are referencing a remote enviroment variable i.e. the hostname
+# Also registering the output so we can use the node join token at later time.
   - name: Initializing Kubernetes cluster
     shell: kubeadm init --apiserver-advertise-address $(hostname -i) --pod-network-cidr=10.244.0.0/16
     register: output
 
+# Storing the logs and join token for use later, ideally the token would be stored in azure key vualt.
   - name: Storing Logs and Generated token for future purpose.
     local_action: copy content={{ output.stdout }} dest={{ token_file }}
 
+# Copying over kubernetes admin.conf, need to work on this later, also need to use ansible copy module.
   - name: Copying required files
     shell: |
      mkdir -p $HOME/.kube
