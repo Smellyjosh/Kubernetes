@@ -1,6 +1,6 @@
 ---
-- import_playbook: pre2.yaml
-- import_playbook: master_node2.yaml
-- import_playbook: worker_node.yml
-- import_playbook: rancher.yml
+- import_playbook: pre.yaml
+- import_playbook: master_node.yaml
+- import_playbook: worker_node.yaml
+- import_playbook: rancher.yaml
 
