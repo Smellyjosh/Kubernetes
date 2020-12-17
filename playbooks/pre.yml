@@ -13,8 +13,8 @@
   - name: Attach RHEL subscription
     community.general.redhat_subscription:
       state: present
-      username: "{{username}}"
-      password: "{{password}}"
+      username: "{{RHELusername}}"
+      password: "{{RHELpassword}}"
       auto_attach: true
       force_register: true
 
@@ -39,12 +39,12 @@
      block: |
       [kubernetes]
       name=Kubernetes
-      baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64   
+      baseurl= "{{ kubernetesRepo }}"   
       enabled=1
       gpgcheck=1
       repo_gpgcheck=1
-      gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
-        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+      gpgkey= "{{ kubernetesGPGYum }}"
+        "{{kubernetesGPG}}"
 
 # Update all packages
   - name: Update all YUM packages

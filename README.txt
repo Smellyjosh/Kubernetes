@@ -5,7 +5,7 @@ Required Installs for host machine running playbooks:
  - sudo subscription-manager repos --enable rhel-7-server-ansible-2.9-rpms
  - sudo yum install ansible
 
-2.) Install RHEL subcritpion Module for ansible:
+2.) Install additional general and kubernetes Modules for ansible:
  - ansible-galaxy collection install community.general
  - ansible-galaxy collection install community.kubernetes
 
@@ -24,7 +24,7 @@ Required Installs for host machine running playbooks:
  - sudo vim inventory.ini
 
 7.) Add RHEL credentials for subscription
- - Add RHEL credentials to the bottom of the env_variables file under username/password.
- - This allows your subscritpion to be attached to all nodes
+ - Add RHEL credentials to the bottom of the env_variables file under RHELusername/RHELpassword.
+ - allows your subscritpion to be attached to all nodes
 
-8.) Run Kubernetes_install.yml -KK
+8.) Run 'ansbible-playbook Kubernetes_install.yml -KK'

@@ -31,6 +31,13 @@
      sudo cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
      sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-# Currently using Flannel for Container network interface, also tested calico
-  - name: Install Network Add-on
-    command: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+  - name: Creating directory for deployments
+    shell: mkdir -p $HOME/deployments
+
+  - name: Copy over Flannel deployment
+    copy:
+      src:  CNIs/flannel.yml
+      dest: /$HOME/deployments/flannel.yml
+
+  - name: Install Flannel Network Add-on
+    command: kubectl apply -f $HOME/deployments/flannel.yml
