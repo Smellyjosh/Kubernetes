@@ -39,12 +39,12 @@
      block: |
       [kubernetes]
       name=Kubernetes
-      baseurl=https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64   
+      baseurl= "{{ kubernetesRepo }}"   
       enabled=1
       gpgcheck=1
       repo_gpgcheck=1
-      gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
-        https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+      gpgkey= "{{ kubernetesGPGYum }}"
+        "{{kubernetesGPG}}"
 
 # Update all packages
   - name: Update all YUM packages
@@ -104,6 +104,6 @@
   - name: Setting Selinux to permissive
     shell: setenforce 0
 
-# Using FirewallD for rules, flushing IPtables Rules. Can probably stop IPtables service.
+# Using FirewallD for rules, flushing IPtables Rules.
   - name: Flushing IPtables, Using FirewallD
     shell: iptables -F

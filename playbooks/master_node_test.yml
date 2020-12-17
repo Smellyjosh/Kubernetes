@@ -17,19 +17,27 @@
 # Creating the kubernetes cluster. Using the shell since we are referencing a remote enviroment variable i.e. the hostname
 # Also registering the output so we can use the node join token at later time.
   - name: Initializing Kubernetes cluster
-    shell: kubeadm init --apiserver-advertise-address $(hostname -i) --pod-network-cidr=10.244.0.0/16
+    shell: kubeadm init --apiserver-advertise-address $(hostname -i) --pod-network-cidr "{{ kubernetesCIDR }}"
     register: output
 
 # Storing the logs and join token for use later, ideally the token would be stored in azure key vualt.
   - name: Storing Logs and Generated token for future purpose.
     local_action: copy content={{ output.stdout }} dest={{ token_file }}
 
-# Copying over kubernetes admin.conf, need to work on this later, also need to use ansible copy module.
+# Need to work on this later, also need to use ansible copy module.
   - name: Copying required files
     shell: |
      mkdir -p $HOME/.kube
      sudo cp -f /etc/kubernetes/admin.conf $HOME/.kube/config
      sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
-  - name: Install Network Add-on
-    command: kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+  - name: Creating directory for deployments
+    shell: mkdir -p $HOME/deployments
+
+  - name: Copy over Flannel deployment
+    copy:
+      src:  CNIs/flannel.yml
+      dest: /$HOME/deployments/flannel.yml
+
+  - name: Install Flannel Network Add-on
+    command: kubectl apply -f $HOME/deployments/flannel.yml

@@ -1,0 +1,45 @@
+# Packages to download
+packages:
+- docker #Kubernetes container runtime interface
+- kubeadm #Node agent to communicate pods with kubernetes api server
+- kubectl #CLI for running commands against kubernetes
+
+# Start these services
+services:
+- docker #Kubernetes container runtime interface~
+- kubelet #Node agent to communicate pods with kubernetes api server
+- firewalld #Using for firewall and ports
+
+# Ports to open
+ports:
+- "6443/tcp" #Kubernetes API Server
+- "10250/tcp" #Kublet API
+- "8080/tcp" #may need for exposing an alternative http port
+- "80/tcp" #may need if exposing service on http
+- "443/tcp" #may need if exposing service on https
+- "8285/udp" #Flannel CNI
+- "8472/udp" #Flannel CNI
+- "10250/tcp" #Kublet API
+- "10255/tcp" #Read-only Kublet API
+- "8472/udp" #Flannel CNI
+- "2379/tcp" #etcd server client API, Used by kube-apiserver and etcd
+- "2380/tcp" #etcd server client API, Used by kube-apiserver and etcd
+
+# Depending on RHEL version, these RPMS may need to be enabled.
+subscriptions:
+- "rhel-7-server-optional-rpms"
+- "rhel-7-server-extras-rpms"
+- "rhel-7-server-rpms"
+- "rhel-7-server-optional-source-rpms"
+
+kubernetesRepo: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_64
+kubernetesGPGYum: https://packages.cloud.google.com/yum/doc/yum-key.gpg
+kubernetesGPG: https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
+kubernetesCIDR: 10.244.0.0/16
+rancherRepo: https://releases.rancher.com/server-charts/latest
+hostname: rancher 
+
+token_file: join_token
+
+username: smellyjosh 
+password: subaruWRX20
