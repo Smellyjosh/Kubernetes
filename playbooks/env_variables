@@ -41,5 +41,5 @@ hostname: rancher
 
 token_file: join_token
 
-#RHELusername: 
-#RHELpassword: 
+RHELusername: smellyjosh 
+RHELpassword: subaruWRX20

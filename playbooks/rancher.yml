@@ -24,11 +24,11 @@
 
   - name: Add Rancher Helm repo
     community.kubernetes.helm_repository:
-      name: Rancher
+      name: rancher-stable
       repo_url: "{{rancherRepo}}"
   
-  - name: Add Rancher Helm repo (duplicate, testing something)
-    shell: helm repo add rancher-latest "{{rancherRepo}}"
+  #- name: Add Rancher Helm repo (duplicate, testing something)
+  #  shell: helm repo add rancher-latest "{{rancherRepo}}"
 
   - name: Add Jetstack Helm repo
     community.kubernetes.helm_repository:
@@ -52,17 +52,15 @@
 
   - name: Wait for Cert-Manager webhook
     wait_for:
-      timeout: 20
+      timeout: 30
 
   - name: Install Cert-Manager
     command: helm install cert-manager jetstack/cert-manager --namespace cert-manager --version v1.0.4
 
   - name: Wait for Cert-Manager webhook
     wait_for:
-      timeout: 60
+      timeout: 180
 
   - name: Install Rancher
-    command: helm install rancher rancher-latest/rancher --namespace cattle-system --set hostname="{{ hostname }}"
-    register: out
-  - debug: var=out.stdout_lines
+    command: helm install rancher rancher-stable/rancher --version=2.5.4 --namespace cattle-system --set hostname="{{ hostname }}"
 
