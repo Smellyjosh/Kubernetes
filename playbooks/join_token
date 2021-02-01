@@ -32,13 +32,13 @@
 [control-plane] Creating static Pod manifest for "kube-scheduler"
 [etcd] Creating static Pod manifest for local etcd in "/etc/kubernetes/manifests"
 [wait-control-plane] Waiting for the kubelet to boot up the control plane as static Pods from directory "/etc/kubernetes/manifests". This can take up to 4m0s
-[apiclient] All control plane components are healthy after 10.004480 seconds
+[apiclient] All control plane components are healthy after 14.011433 seconds
 [upload-config] Storing the configuration used in ConfigMap "kubeadm-config" in the "kube-system" Namespace
 [kubelet] Creating a ConfigMap "kubelet-config-1.20" in namespace kube-system with the configuration for the kubelets in the cluster
 [upload-certs] Skipping phase. Please see --upload-certs
 [mark-control-plane] Marking the node node-vm0 as control-plane by adding the labels "node-role.kubernetes.io/master=''" and "node-role.kubernetes.io/control-plane='' (deprecated)"
 [mark-control-plane] Marking the node node-vm0 as control-plane by adding the taints [node-role.kubernetes.io/master:NoSchedule]
-[bootstrap-token] Using token: jf6xp8.wr2d0milz9e03lt8
+[bootstrap-token] Using token: ilccwi.v2w3asbbp2soygii
 [bootstrap-token] Configuring bootstrap tokens, cluster-info ConfigMap, RBAC Roles
 [bootstrap-token] configured RBAC rules to allow Node Bootstrap tokens to get nodes
 [bootstrap-token] configured RBAC rules to allow Node Bootstrap tokens to post CSRs in order for nodes to get long term certificate credentials
@@ -67,5 +67,5 @@ Run "kubectl apply -f [podnetwork].yaml" with one of the options listed at:
 
 Then you can join any number of worker nodes by running the following on each as root:
 
-kubeadm join 10.0.0.9:6443 --token jf6xp8.wr2d0milz9e03lt8 \
-    --discovery-token-ca-cert-hash sha256:8c1f65da7726bb98ae0de4cc2413d7f2aed1c1eeb660bdafda6994eb1e0f8cce 
+kubeadm join 10.0.0.9:6443 --token ilccwi.v2w3asbbp2soygii \
+    --discovery-token-ca-cert-hash sha256:510ec9eaa6d2eff5b8112bd2ebba28a02f1c7483cc11c713a87c8c9088797b22 

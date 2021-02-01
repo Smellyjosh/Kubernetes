@@ -36,7 +36,7 @@ kubernetesRepo: https://packages.cloud.google.com/yum/repos/kubernetes-el7-x86_6
 kubernetesGPGYum: https://packages.cloud.google.com/yum/doc/yum-key.gpg
 kubernetesGPG: https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 kubernetesCIDR: 10.244.0.0/16
-rancherRepo: https://releases.rancher.com/server-charts/latest
+rancherRepo: https://releases.rancher.com/server-charts/stable
 hostname: rancher 
 
 token_file: join_token

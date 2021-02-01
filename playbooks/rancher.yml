@@ -64,3 +64,8 @@
   - name: Install Rancher
     command: helm install rancher rancher-stable/rancher --version=2.5.4 --namespace cattle-system --set hostname="{{ hostname }}"
 
+  - name: Deleting existing rancher server
+    command: kubectl delete service rancher -n cattle-system
+
+  - name: Creating rancher service
+    command: kubectl expose deployment rancher -n cattle-system --external-ip=10.0.0.10 --port=443 --target-port=443
