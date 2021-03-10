@@ -10,13 +10,13 @@
 
 # Attaching the RHEL subscription so we can make use of official RHEL Repos
 # Credentials changable in env_variables file under username and password
-  - name: Attach RHEL subscription
-    community.general.redhat_subscription:
-      state: present
-      username: "{{RHELusername}}"
-      password: "{{RHELpassword}}"
-      auto_attach: true
-      force_register: true
+#  - name: Attach RHEL subscription
+#    community.general.redhat_subscription:
+#      state: present
+#      username: "{{RHELusername}}"
+#      password: "{{RHELpassword}}"
+#      auto_attach: true
+#      force_register: true
 
 # Enabling extra RHEL Server Repos
 # Adding Addtional RHEL repos to enable is available in env_variables file under subscriptions. 
