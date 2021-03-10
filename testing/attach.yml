@@ -1,0 +1,12 @@
+- hosts: all
+  user: root
+  become: true
+
+  tasks:
+
+# This book is for testing when using machines that are not yet subbed to RHEL
+
+# Attaching the RHEL subscription so we can make use of official RHEL Repos
+# Credentials changable in env_variables file under username and password
+  - name: Attach RHEL subscription
+    shell: subscription-manager register --username <username> --password <password> --auto-attach
