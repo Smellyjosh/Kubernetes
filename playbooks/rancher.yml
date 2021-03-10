@@ -4,20 +4,29 @@
   vars_files:
   - env_variables
   tasks:
-  - name: Download file with check (md5)
-    get_url:
-      url: https://get.helm.sh/helm-v3.4.1-linux-amd64.tar.gz
-      dest: /home/helm.tar.gz
-      checksum: sha256:538f85b4b73ac6160b30fd0ab4b510441aa3fa326593466e8bf7084a9c288420
 
-  - name: Unarchive helm tar
-    unarchive:
-      src: /home/helm.tar.gz
-      dest: /home
-      remote_src: yes
+  - name: copy helm
+    copy:
+      src: Helm/helm
+      dest: /$HOME/deployments/helm
+  
+  - name: Helm execute permissions
+    shell: chmod u+x /$HOME/deployments/helm
+
+ # - name: Download file with check (md5)
+ #   get_url:
+ #     url: https://get.helm.sh/helm-v3.4.1-linux-amd64.tar.gz
+ #     dest: /home/helm.tar.gz
+ #     checksum: sha256:538f85b4b73ac6160b30fd0ab4b510441aa3fa326593466e8bf7084a9c288420
+
+ # - name: Unarchive helm tar
+ #   unarchive:
+ #     src: /home/helm.tar.gz
+ #     dest: /home
+ #     remote_src: yes
 
   - name: Move Helm Binary to bin
-    command: mv /home/linux-amd64/helm /usr/bin/
+    command: mv /$HOME/deployments/helm /usr/bin/
 
   - name: Add helm to Path
     shell: export PATH=$PATH:/usr/local/bin
