@@ -2,5 +2,5 @@
 - import_playbook: playbooks/pre.yml
 - import_playbook: playbooks/master_node.yml
 - import_playbook: playbooks/worker_node.yml
-- import_playbook: playbooks/rancher.yml
+- import_playbook: playbooks/rancherServices.yml
 
